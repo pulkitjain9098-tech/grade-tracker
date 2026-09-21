@@ -1,13 +1,13 @@
-import { SUBJECTS, GRADES, PASSING_GRADES } from "../lib/config";
+﻿import { SUBJECTS, GRADES } from "../lib/config";
 
 function aggregate(rows) {
   const bySubject = {};
   for (const s of SUBJECTS) {
-    bySubject[s.id] = { entries: [], minBySrade: {} };
+    bySubject[s.id] = { entries: [] };
   }
 
   for (const row of rows) {
-    if (!bySubject[row.subject]) continue; // subject removed from config, ignore
+    if (!bySubject[row.subject]) continue;
     bySubject[row.subject].entries.push(row);
   }
 
@@ -25,19 +25,9 @@ function aggregate(rows) {
       minByGrade[g] = marksForGrade.length ? Math.min(...marksForGrade) : null;
     }
 
-    const passingMarks = entries
-      .filter((e) => PASSING_GRADES.includes(e.grade))
-      .map((e) => e.marks);
-    const passing = passingMarks.length ? Math.min(...passingMarks) : null;
-
-    const avg =
-      entries.reduce((sum, e) => sum + e.marks, 0) / entries.length;
-
     result[s.id] = {
       count: entries.length,
       minByGrade,
-      passing,
-      avg: Math.round(avg * 10) / 10,
     };
   }
   return result;
@@ -57,7 +47,6 @@ export default function GradeTable({ rows }) {
               {GRADES.map((g) => (
                 <th key={g}>{g}</th>
               ))}
-              <th>Passing</th>
             </tr>
           </thead>
           <tbody>
@@ -72,7 +61,6 @@ export default function GradeTable({ rows }) {
                   {GRADES.map((g) => (
                     <td key={g}>{a && a.minByGrade[g] != null ? a.minByGrade[g] : "—"}</td>
                   ))}
-                  <td>{a && a.passing != null ? a.passing : "—"}</td>
                 </tr>
               );
             })}
