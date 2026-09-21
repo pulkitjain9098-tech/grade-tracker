@@ -26,7 +26,6 @@ function aggregate(rows) {
     }
 
     result[s.id] = {
-      count: entries.length,
       minByGrade,
     };
   }
@@ -54,10 +53,7 @@ export default function GradeTable({ rows }) {
               const a = agg[s.id];
               return (
                 <tr key={s.id}>
-                  <td>
-                    {s.label}
-                    {a && <span className="count"> ({a.count})</span>}
-                  </td>
+                  <td>{s.label}</td>
                   {GRADES.map((g) => (
                     <td key={g}>{a && a.minByGrade[g] != null ? a.minByGrade[g] : "—"}</td>
                   ))}
@@ -69,9 +65,7 @@ export default function GradeTable({ rows }) {
       </div>
       <p style={{ color: "#9aa7b2", fontSize: "0.8rem", marginTop: "12px", marginBottom: 0 }}>
         Each grade column shows the lowest marks anyone reported getting that
-        grade in - i.e. an estimate of the cutoff. The number in brackets is
-        how many people have submitted for that subject; treat cutoffs with
-        very few responses as unreliable.
+        grade in - i.e. an estimate of the cutoff.
       </p>
     </div>
   );
