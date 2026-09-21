@@ -1,0 +1,36 @@
+rules_version = '2';
+
+// IMPORTANT: replace lnmiit\\.ac\\.in below if your college domain differs
+// from NEXT_PUBLIC_ALLOWED_EMAIL_DOMAIN. This must be kept in sync manually -
+// Firestore rules can't read your app's env vars.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isCollegeUser() {
+      return request.auth != null &&
+             request.auth.token.email != null &&
+             request.auth.token.email.matches('.*@lnmiit[.]ac[.]in$') &&
+             request.auth.token.email_verified == true;
+    }
+
+    match /submissions/{docId} {
+      // Anyone signed in with a college account can read the aggregated data.
+      allow read: if true;
+
+      // A user may only ever write their OWN doc (id = "<uid>_<subject>"),
+      // and only with their own uid/subject inside it. No deletes - if
+      // someone messes up an entry they overwrite it, they can't erase it
+      // and hide that they submitted.
+      allow create, update: if isCollegeUser()
+        && request.resource.data.uid == request.auth.uid
+        && docId == request.auth.uid + '_' + request.resource.data.subject
+        && request.resource.data.marks is number
+        && request.resource.data.marks >= 0
+        && request.resource.data.marks <= 100
+        && request.resource.data.grade is string;
+
+      allow delete: if false;
+    }
+  }
+}
