@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Head from "next/head";
 import { watchAuth, logOut, isAllowedEmail } from "../lib/firebase";
 import Login from "../components/Login";

@@ -1,13 +1,13 @@
-﻿import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Head from "next/head";
-import { watchSubmissions } from "../lib/firebase";
+import { watchSummaries } from "../lib/firebase";
 import GradeTable from "../components/GradeTable";
 
 export default function ViewPage() {
-  const [rows, setRows] = useState([]);
+  const [summaries, setSummaries] = useState({});
 
   useEffect(() => {
-    const unsub = watchSubmissions(setRows);
+    const unsub = watchSummaries(setSummaries);
     return unsub;
   }, []);
 
@@ -24,7 +24,8 @@ export default function ViewPage() {
         </div>
       </div>
 
-      <GradeTable rows={rows} />
+      <GradeTable summaries={summaries} />
     </div>
   );
 }
+
