@@ -34,7 +34,7 @@ export default function GradeTable({ summaries }) {
         </table>
       </div>
       <p className="note">
-        Each grade column shows the lowest marks anyone reported for that grade, so it is an estimate of the cutoff. Passing is the D cutoff.
+        Each grade column shows the lowest marks anyone reported for that grade, so it is an estimate of the cutoff.
       </p>
     </div>
   );
